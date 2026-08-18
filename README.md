@@ -1,5 +1,7 @@
 # IriX — Android 客户端
 
+[![CI](https://github.com/MCFSO/Irix-android/actions/workflows/ci.yml/badge.svg)](https://github.com/MCFSO/Irix-android/actions/workflows/ci.yml)
+
 IriX 的 Android 客户端：管理 MCSM 风格节点的服务器管理工具，支持实例生命周期、文件管理、容器环境、资源监控。
 
 配套的服务端节点守护进程（IriX-Node，纯 Go 标准库实现）见 [github.com/MCFSO/IriX-Node](https://github.com/MCFSO/IriX-Node)。

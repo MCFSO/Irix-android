@@ -1,0 +1,68 @@
+name: 缺陷报告
+description: 提交一个 bug，帮助改进 IriX Android 客户端
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！请尽量提供完整信息，便于复现与定位问题。
+  - type: input
+    id: version
+    attributes:
+      label: 客户端版本
+      description: 版本号或 APK 来源（如 1.0 / debug 自编译 / 安装包渠道）
+      placeholder: 例如 1.0 (debug)
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: 设备与系统
+      description: 手机型号 + Android 版本
+      placeholder: 例如 Pixel 7 / Android 15
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: 节点环境
+      description: 节点类型（IriX-Node / MCSM）与版本、节点地址形式（http/https、公网/局域网）
+      placeholder: 例如 IriX-Node v0.x / http://192.168.1.5:12346
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 一步步描述如何触发该问题
+      placeholder: |
+        1. 打开「实例」页
+        2. 点击…
+        3. 出现…
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+      description: 你期望发生什么
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为
+      description: 实际发生了什么（含错误提示文案）
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志 / 截图
+      description: 错误消息、logcat 或截图（可直接拖拽上传）
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 自查
+      options:
+        - label: 已确认问题可以稳定复现
+        - label: 已搜索过，没有相同或类似的 issue
