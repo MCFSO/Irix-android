@@ -15,13 +15,11 @@ captures/
 *.aab
 *.apk
 output-metadata.json
+.idea/
+.kotlin/
 
 # IntelliJ
 *.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
 
 # Keystore files
 *.jks
@@ -32,3 +30,7 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Local tooling state
+.mimosa/
+.DS_Store

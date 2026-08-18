@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- 节点为本地/局域网 HTTP 服务（http://）。
+         注意：网络安全配置不支持网段/私有地址范围匹配，无法在配置层只放行私有网段，
+         因此 base-config 对明文流量全局放行；"公网必须 HTTPS"由应用层强制：
+         NetworkPolicy 在节点编辑保存时校验、ApiFactory 在请求构建时拦截。 -->
+    <base-config cleartextTrafficPermitted="true" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">localhost</domain>
+        <domain includeSubdomains="false">127.0.0.1</domain>
+    </domain-config>
+</network-security-config>

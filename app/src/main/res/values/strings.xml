@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 应用 -->
+    <string name="app_name">IriX</string>
+
+    <!-- 通用 -->
+    <string name="refresh">刷新</string>
+    <string name="back">返回</string>
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
+    <string name="save">保存</string>
+    <string name="saved">已保存</string>
+    <string name="deleted">已删除</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="create">创建</string>
+    <string name="name">名称</string>
+    <string name="loading">加载中…</string>
+    <string name="load_failed">加载失败</string>
+    <string name="retry">重试</string>
+    <string name="select_node_hint">请选择节点</string>
+
+    <!-- 主导航 -->
+    <string name="nav_overview">概览</string>
+    <string name="nav_instances">实例</string>
+    <string name="nav_files">文件</string>
+    <string name="nav_containers">容器</string>
+    <string name="nav_nodes">节点</string>
+
+    <!-- 概览 -->
+    <string name="overview_node_title">节点：%1$s</string>
+    <string name="overview_no_node">未选择节点</string>
+    <string name="overview_empty_hint">请在节点页添加并选择一个节点</string>
+    <string name="info_system">系统信息</string>
+    <string name="info_hostname">主机名</string>
+    <string name="info_os">系统</string>
+    <string name="info_version">版本</string>
+    <string name="info_uptime">运行时长</string>
+    <string name="info_node_version">节点版本</string>
+    <string name="info_cpu">CPU</string>
+    <string name="usage_rate">使用率</string>
+    <string name="info_mem">内存</string>
+    <string name="used_total">已用 / 总量</string>
+    <string name="info_disk">磁盘</string>
+    <string name="info_network">网络吞吐</string>
+    <string name="info_download">下载</string>
+    <string name="info_upload">上传</string>
+    <string name="info_instances">实例</string>
+    <string name="running_total">运行中 / 总数</string>
+    <string name="daemon_available">守护进程可用</string>
+    <string name="uptime_dhm">%1$d天 %2$d小时 %3$d分钟</string>
+    <string name="uptime_hm">%1$d小时 %2$d分钟</string>
+    <string name="uptime_m">%1$d分钟</string>
+
+    <!-- 节点页 -->
+    <string name="add_node">添加节点</string>
+    <string name="edit_node">编辑节点</string>
+    <string name="nodes_empty_hint">还没有节点。点击右下角 + 添加你的第一个 IriX 节点。</string>
+    <string name="key_configured">已配置密钥</string>
+    <string name="address">地址</string>
+    <string name="address_placeholder">http://192.168.1.5:12346</string>
+    <string name="api_key_optional">配对码 / API Key（可选）</string>
+    <string name="address_scheme_required">地址必须以 http:// 或 https:// 开头</string>
+
+    <!-- 实例 -->
+    <string name="new_instance">新建实例</string>
+    <string name="instances_empty_hint">暂无实例。点击右下角 + 创建。</string>
+    <string name="unnamed_instance">未命名实例</string>
+    <string name="start_command">启动命令</string>
+    <string name="stop_command">停止命令</string>
+    <string name="workdir">工作目录</string>
+    <string name="instance_created">实例已创建</string>
+    <string name="instances_deleted">已删除 %1$d 个实例</string>
+
+    <!-- 实例详情 -->
+    <string name="instance_detail_title">实例详情</string>
+    <string name="files">文件</string>
+    <string name="start">启动</string>
+    <string name="stop">停止</string>
+    <string name="restart">重启</string>
+    <string name="kill">强杀</string>
+    <string name="tab_console">控制台</string>
+    <string name="tab_config">配置</string>
+    <string name="tab_info">信息</string>
+    <string name="fetch_log">拉取日志</string>
+    <string name="no_log_output">（暂无日志输出）</string>
+    <string name="command_placeholder">输入命令…</string>
+    <string name="send">发送</string>
+    <string name="input_encoding">输入编码</string>
+    <string name="output_encoding">输出编码</string>
+    <string name="auto_start">自动启动</string>
+    <string name="auto_restart">自动重启</string>
+    <string name="save_config">保存配置</string>
+    <string name="config_saved">配置已保存</string>
+    <string name="basic_info">基本信息</string>
+    <string name="info_uuid">UUID</string>
+    <string name="info_started">启动次数</string>
+    <string name="info_status">状态</string>
+    <string name="info_disk_usage">磁盘占用</string>
+    <string name="process_info">进程信息</string>
+    <string name="info_pid">PID</string>
+    <string name="info_memory">内存</string>
+
+    <!-- 实例状态 -->
+    <string name="status_busy">忙碌中</string>
+    <string name="status_stopped">已关闭</string>
+    <string name="status_stopping">停止中</string>
+    <string name="status_starting">启动中</string>
+    <string name="status_running">运行中</string>
+    <string name="status_unknown">未知（%1$d）</string>
+
+    <!-- 文件管理 -->
+    <string name="files_title">文件 - %1$s</string>
+    <string name="files_no_node_hint">请先在节点页选择节点</string>
+    <string name="files_hint">文件管理基于实例工作目录。请到「实例」页打开某个实例后，点击「文件」进入。</string>
+    <string name="new_folder">新建目录</string>
+    <string name="new_file">新建文件</string>
+    <string name="upload_file">上传文件</string>
+    <string name="root">根</string>
+    <string name="dir_label">目录</string>
+    <string name="download">下载</string>
+    <string name="rename">重命名</string>
+    <string name="empty_dir">空目录</string>
+    <string name="loading_files">加载文件列表</string>
+    <string name="read_file_failed">无法读取文件</string>
+    <string name="renamed">已重命名</string>
+    <string name="download_started">已开始下载到下载目录/irix/</string>
+    <string name="download_enqueue_failed">下载入队失败</string>
+    <string name="read_picker_failed">读取所选文件失败</string>
+    <string name="upload_done">上传完成：%1$s</string>
+    <string name="upload_failed">上传失败</string>
+
+    <!-- 容器环境 -->
+    <string name="container_unavailable">该节点未启用容器运行时\n%1$s</string>
+    <string name="container_runtime">运行时：%1$s（%2$s）v%3$s</string>
+    <string name="containers_empty">暂无容器</string>
+    <string name="container_ports">端口：%1$s</string>
+    <string name="new_container">新建容器</string>
+    <string name="image">镜像</string>
+    <string name="ports_hint">端口映射（host:container，逗号分隔）</string>
+    <string name="volumes_hint">数据卷（host:container，逗号分隔）</string>
+    <string name="env_hint">环境变量（每行 KEY=VALUE）</string>
+    <string name="restart_policy">重启策略</string>
+    <string name="policy_no">无</string>
+    <string name="policy_always">总是</string>
+    <string name="policy_on_failure">失败时</string>
+    <string name="memory_limit">内存限制（MB，可选）</string>
+    <string name="cpu_limit">CPU 限制（可选）</string>
+    <string name="disk_limit">磁盘限制（MB，可选）</string>
+    <string name="container_created">容器已创建</string>
+
+    <!-- 文件传输通知 -->
+    <string name="transfer_download_title">IriX 下载：%1$s</string>
+    <string name="transfer_download_desc">从节点下载 %1$s</string>
+</resources>
