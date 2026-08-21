@@ -1,0 +1,14 @@
+IriX is an open-source Android client for managing MCSM-style server nodes, including the IriX-Node daemon and MCSManager nodes.
+
+Features:
+
+* Overview: system information, CPU / memory / disk usage, network throughput and instance statistics, with 15-second automatic refresh
+* Instance management: list instances, start / stop / restart / kill, send console commands, view logs (with auto-refresh), edit configuration (start command, working directory, encodings, auto-start / auto-restart), create and delete instances
+* File management: browse the instance working directory with breadcrumb navigation, create folders / files, rename, delete, edit text files inline, direct download (system DownloadManager) and upload (multipart)
+* Container environment: runtime info (Docker / Bastille), container list and lifecycle control (start / stop / restart / kill / remove), create containers with image, command, port mappings, volumes, environment variables, restart policy and resource limits
+* Node management: add / edit / delete multiple nodes, switch the active node with one tap, configure API key or pairing code, configurations are stored locally (DataStore)
+
+Network notes:
+
+* The app talks to your own node daemons over HTTP or HTTPS on your LAN. Cleartext HTTP is only permitted for loopback / private / link-local addresses; public addresses are forced to use HTTPS (enforced by the built-in NetworkPolicy at both input and request time)
+* The app uses only the INTERNET and ACCESS_NETWORK_STATE permissions. No ads, no tracking, no analytics.

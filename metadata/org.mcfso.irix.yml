@@ -1,0 +1,24 @@
+Categories:
+  - System
+License: MIT
+AuthorName: MCFSO
+AuthorEmail: 1400619125@qq.com
+WebSite: https://github.com/MCFSO/Irix-android
+SourceCode: https://github.com/MCFSO/Irix-android
+IssueTracker: https://github.com/MCFSO/Irix-android/issues
+Changelog: https://github.com/MCFSO/Irix-android/commits/main
+Name: IriX
+Summary: 管理 IriX / MCSM 风格服务器节点的开源客户端
+Description: |
+  IriX 是一个开源的 Android 客户端，用于管理 MCSM 风格的服务器节点
+  （兼容 IriX-Node 守护进程与 MCSManager 节点）。
+
+  功能：
+  * 概览：系统信息、CPU / 内存 / 磁盘使用率、网络吞吐与实例统计，15 秒自动刷新
+  * 实例管理：列表、启动 / 停止 / 重启 / 强杀、控制台命令、日志查看、配置编辑、新建与删除
+  * 文件管理：实例工作目录浏览、新建 / 重命名 / 删除、文本在线编辑、直连下载与上传
+  * 容器环境：Docker / Bastille 运行时信息、容器生命周期控制、新建容器（端口 / 卷 / 环境变量 / 资源限制）
+  * 节点管理：多节点增删改、一键切换、API Key / 配对码配置，本地持久化
+
+  安全说明：明文 HTTP 仅允许回环 / 私有 / 链路本地地址，公网地址强制 HTTPS；
+  仅使用 INTERNET 与 ACCESS_NETWORK_STATE 权限，无广告、无跟踪、无统计。
