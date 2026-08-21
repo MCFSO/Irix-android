@@ -139,6 +139,18 @@ fun IrixApp() {
                         vm = filesVm,
                         onBack = { navController.popBackStack() },
                         onEdit = { path -> navController.navigate(Routes.fileEdit(uuid, path)) },
+                        onOpenTrash = { navController.navigate(Routes.filesTrash(uuid)) },
+                    )
+                }
+                composable(Routes.FILES_TRASH) { entry ->
+                    val uuid = entry.arguments?.getString("uuid") ?: return@composable
+                    val node = selected ?: return@composable
+                    val trashVm: org.mcfso.irix.ui.files.TrashViewModel = viewModel()
+                    org.mcfso.irix.ui.files.TrashScreen(
+                        uuid = uuid,
+                        node = node,
+                        vm = trashVm,
+                        onBack = { navController.popBackStack() },
                     )
                 }
                 composable(Routes.FILE_EDIT) { entry ->

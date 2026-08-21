@@ -71,6 +71,13 @@
     <string name="workdir">工作目录</string>
     <string name="instance_created">实例已创建</string>
     <string name="instances_deleted">已删除 %1$d 个实例</string>
+    <string name="import_instance">导入目录</string>
+    <string name="import_instance_path">目录路径（如 /srv/mc/survival）</string>
+    <string name="import_action">导入</string>
+    <string name="instance_imported">实例已导入</string>
+    <string name="delete_instance">删除实例</string>
+    <string name="delete_instance_confirm">确定删除「%1$s」？此操作不可撤销。</string>
+    <string name="delete_instance_files">同时删除实例工作目录文件</string>
 
     <!-- 实例详情 -->
     <string name="instance_detail_title">实例详情</string>
@@ -82,6 +89,7 @@
     <string name="tab_console">控制台</string>
     <string name="tab_config">配置</string>
     <string name="tab_info">信息</string>
+    <string name="tab_tools">工具</string>
     <string name="fetch_log">拉取日志</string>
     <string name="no_log_output">（暂无日志输出）</string>
     <string name="command_placeholder">输入命令…</string>
@@ -100,6 +108,28 @@
     <string name="process_info">进程信息</string>
     <string name="info_pid">PID</string>
     <string name="info_memory">内存</string>
+    <string name="clear_log">清空日志</string>
+    <string name="clear_log_confirm">确定清空该实例的所有持久化日志？此操作不可撤销。</string>
+    <string name="log_cleared">日志已清空</string>
+    <string name="live_stats">实时运行指标</string>
+    <string name="stats_not_running">实例未运行，暂无实时指标</string>
+    <string name="stats_players">玩家</string>
+    <string name="stats_tps">TPS</string>
+    <string name="java_runtime">Java 运行时</string>
+    <string name="java_available_suffix">（可用）</string>
+    <string name="java_unavailable_suffix">（不可用）</string>
+    <string name="jdk_install">安装</string>
+    <string name="jdk_uninstall">卸载</string>
+    <string name="jdk_uninstalled">JDK 已卸载</string>
+    <string name="jdk_major">大版本（如 21）</string>
+    <string name="core_download">核心下载</string>
+    <string name="core_download_hint">在节点上直接下载核心到实例目录，免客户端中转。</string>
+    <string name="core_url">下载链接</string>
+    <string name="core_file_name">文件名</string>
+    <string name="core_download_start">开始下载</string>
+    <string name="task_running">执行中</string>
+    <string name="task_done">已完成</string>
+    <string name="task_failed">失败</string>
 
     <!-- 实例状态 -->
     <string name="status_busy">忙碌中</string>
@@ -148,6 +178,32 @@
     <string name="cpu_limit">CPU 限制（可选）</string>
     <string name="disk_limit">磁盘限制（MB，可选）</string>
     <string name="container_created">容器已创建</string>
+    <string name="tab_containers">容器</string>
+    <string name="tab_images">镜像</string>
+    <string name="tab_volumes">卷</string>
+    <string name="tab_networks">网络</string>
+    <string name="images_empty">暂无镜像</string>
+    <string name="image_size">%1$s</string>
+    <string name="image_pull">拉取镜像</string>
+    <string name="image_pulled">镜像已拉取</string>
+    <string name="volumes_empty">暂无数据卷</string>
+    <string name="networks_empty">暂无网络</string>
+    <string name="container_detail_title">容器详情</string>
+    <string name="container_logs_title">日志</string>
+    <string name="exec_placeholder">在容器中执行命令…</string>
+    <string name="exec_done">命令执行完成</string>
+
+    <!-- 回收站 -->
+    <string name="trash_title">回收站</string>
+    <string name="trash_empty">回收站为空</string>
+    <string name="trash_empty_all">清空回收站</string>
+    <string name="trash_empty_confirm">确定永久删除回收站中的全部内容？此操作不可撤销。</string>
+    <string name="trash_restore">恢复</string>
+    <string name="trash_delete_forever">永久删除</string>
+    <string name="trash_restored">已恢复 %1$d 项</string>
+    <string name="trash_emptied">回收站已清空</string>
+    <string name="trash_original_path">原路径：%1$s</string>
+    <string name="moved_to_trash">已移入回收站</string>
 
     <!-- 文件传输通知 -->
     <string name="transfer_download_title">IriX 下载：%1$s</string>

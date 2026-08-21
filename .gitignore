@@ -34,3 +34,7 @@ google-services.json
 # Local tooling state
 .mimosa/
 .DS_Store
+
+# 子目录中独立维护的服务端仓库（IriX-Node），不纳入客户端仓库追踪与扫描
+IriX-Node/
+.zcode/

@@ -53,6 +53,17 @@ class InstancesViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    /** 导入节点上的目录为实例（POST /api/instance/import）。 */
+    fun importInstance(node: NodeConfig, path: String, nickname: String) {
+        viewModelScope.launch {
+            val r = AppContainer.repository.instanceImport(node, path, nickname)
+            _state.update {
+                it.copy(lastMessage = if (r is ApiResult.Error) r.message else getApplication<Application>().getString(R.string.instance_imported))
+            }
+            load(node, force = true)
+        }
+    }
+
     fun delete(node: NodeConfig, uuids: List<String>, deleteFile: Boolean) {
         viewModelScope.launch {
             val r = AppContainer.repository.instanceDelete(node, uuids, deleteFile)

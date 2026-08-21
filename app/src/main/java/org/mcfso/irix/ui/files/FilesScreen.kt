@@ -65,6 +65,7 @@ fun FilesScreen(
     vm: FilesViewModel,
     onBack: () -> Unit,
     onEdit: (String) -> Unit,
+    onOpenTrash: () -> Unit,
 ) {
     LaunchedEffect(uuid, node.id) { vm.open(node, uuid) }
     val state by vm.state.collectAsState()
@@ -95,6 +96,9 @@ fun FilesScreen(
                 actions = {
                     IconButton(onClick = { vm.refresh(node, uuid) }) {
                         Icon(Icons.Outlined.Refresh, contentDescription = stringResource(R.string.refresh))
+                    }
+                    IconButton(onClick = onOpenTrash) {
+                        Icon(Icons.Outlined.Delete, contentDescription = stringResource(R.string.trash_title))
                     }
                     IconButton(onClick = { showMkdir = true }) {
                         Icon(Icons.Outlined.CreateNewFolder, contentDescription = stringResource(R.string.new_folder))
@@ -136,7 +140,7 @@ fun FilesScreen(
                                 else onEdit(e.name)
                             },
                             onDownload = { e -> vm.downloadTicket(context, node, uuid, e.name) },
-                            onDelete = { e -> vm.delete(node, uuid, listOf(e.name)) },
+                            onDelete = { e -> vm.deleteToTrash(node, uuid, listOf(e.name)) },
                             onRename = { e -> renameTarget = e },
                         )
                     }
