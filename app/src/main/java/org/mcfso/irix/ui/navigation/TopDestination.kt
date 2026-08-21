@@ -27,8 +27,10 @@ object Routes {
     const val INSTANCE_DETAIL = "instance/{uuid}"
     const val FILES_DETAIL = "files/{uuid}"
     const val FILE_EDIT = "file/edit/{uuid}/{path:.+}"
+    const val FILES_TRASH = "files/{uuid}/trash"
 
     fun instanceDetail(uuid: String) = "instance/$uuid"
     fun filesDetail(uuid: String) = "files/$uuid"
     fun fileEdit(uuid: String, path: String) = "file/edit/$uuid/${java.net.URLEncoder.encode(path, "UTF-8")}"
+    fun filesTrash(uuid: String) = "files/$uuid/trash"
 }

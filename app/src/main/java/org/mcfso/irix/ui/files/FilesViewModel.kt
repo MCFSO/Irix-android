@@ -106,6 +106,24 @@ class FilesViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /** 删除到回收站（POST /api/files/trash）；旧节点/MCSM 不支持时回退永久删除。 */
+    fun deleteToTrash(node: NodeConfig, uuid: String, targets: List<String>) {
+        val abs = targets.map { joinPath(_state.value.pathStack.last(), it) }
+        viewModelScope.launch {
+            val r = AppContainer.repository.fileTrash(node, uuid, abs)
+            _message.value = when (r) {
+                is ApiResult.Success -> getApplication<Application>().getString(R.string.moved_to_trash)
+                is ApiResult.Error -> {
+                    // 回退：永久删除（MCSM 兼容）
+                    val fallback = AppContainer.repository.fileDelete(node, uuid, abs)
+                    if (fallback is ApiResult.Error) r.message
+                    else getApplication<Application>().getString(R.string.deleted)
+                }
+            }
+            refresh(node, uuid)
+        }
+    }
+
     fun rename(node: NodeConfig, uuid: String, oldName: String, newName: String) {
         val base = _state.value.pathStack.last()
         val src = joinPath(base, oldName)

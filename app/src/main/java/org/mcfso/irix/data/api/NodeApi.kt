@@ -11,6 +11,7 @@ import org.mcfso.irix.data.model.ContainerListItem
 import org.mcfso.irix.data.model.ContainerStats
 import org.mcfso.irix.data.model.CreateInstanceResponse
 import org.mcfso.irix.data.model.DeleteInstanceBody
+import org.mcfso.irix.data.model.DownloadCoreBody
 import org.mcfso.irix.data.model.DownloadTicketResponse
 import org.mcfso.irix.data.model.FileCompressBody
 import org.mcfso.irix.data.model.FileDeleteBody
@@ -22,12 +23,21 @@ import org.mcfso.irix.data.model.FileWriteBody
 import org.mcfso.irix.data.model.ImageBuildBody
 import org.mcfso.irix.data.model.ImageItem
 import org.mcfso.irix.data.model.ImagePullBody
+import org.mcfso.irix.data.model.ImportInstanceBody
 import org.mcfso.irix.data.model.InstanceConfig
 import org.mcfso.irix.data.model.InstanceDetail
 import org.mcfso.irix.data.model.InstanceListResponse
+import org.mcfso.irix.data.model.InstanceStats
+import org.mcfso.irix.data.model.JavaInstallBody
+import org.mcfso.irix.data.model.JavaRuntimeResponse
+import org.mcfso.irix.data.model.JobResult
 import org.mcfso.irix.data.model.LoadStatus
 import org.mcfso.irix.data.model.NetworkItem
 import org.mcfso.irix.data.model.OverviewResponse
+import org.mcfso.irix.data.model.TaskProgress
+import org.mcfso.irix.data.model.TrashBody
+import org.mcfso.irix.data.model.TrashIdsBody
+import org.mcfso.irix.data.model.TrashListResponse
 import org.mcfso.irix.data.model.UploadTicketResponse
 import org.mcfso.irix.data.model.UuidResult
 import org.mcfso.irix.data.model.VolumeItem
@@ -115,6 +125,57 @@ interface NodeApi {
         @Query("size") size: Int? = null,
     ): ApiResponse<String>
 
+    // ----- 实例级扩展（日志持久化 / 运行指标 / 导入 / 核心下载） -----------
+
+    @GET("/api/instance/logs")
+    suspend fun instanceLogs(
+        @Query("uuid") uuid: String,
+        @Query("daemonId") daemonId: String? = null,
+        @Query("tail") tail: Int? = null,
+        @Query("since") since: Long? = null,
+    ): ApiResponse<String>
+
+    @DELETE("/api/instance/logs")
+    suspend fun instanceLogsClear(
+        @Query("uuid") uuid: String,
+        @Query("daemonId") daemonId: String? = null,
+    ): ApiResponse<Boolean>
+
+    @GET("/api/instance/stats")
+    suspend fun instanceStats(
+        @Query("uuid") uuid: String,
+        @Query("daemonId") daemonId: String? = null,
+    ): ApiResponse<InstanceStats>
+
+    @POST("/api/instance/import")
+    suspend fun instanceImport(
+        @Body body: ImportInstanceBody,
+    ): ApiResponse<JobResult>
+
+    @POST("/api/instance/download-core")
+    suspend fun downloadCore(
+        @Body body: DownloadCoreBody,
+    ): ApiResponse<JobResult>
+
+    @GET("/api/instance/download-core-progress")
+    suspend fun downloadCoreProgress(
+        @Query("jobId") jobId: String,
+    ): ApiResponse<TaskProgress>
+
+    // ----- Java 运行时 / JDK 安装（§4.2.1 / §4.2.2） ---------------------
+
+    @GET("/api/runtime/java")
+    suspend fun runtimeJava(): ApiResponse<JavaRuntimeResponse>
+
+    @POST("/api/runtime/java/install")
+    suspend fun javaInstall(@Body body: JavaInstallBody): ApiResponse<JobResult>
+
+    @GET("/api/runtime/java/install-progress")
+    suspend fun javaInstallProgress(@Query("jobId") jobId: String): ApiResponse<TaskProgress>
+
+    @DELETE("/api/runtime/java")
+    suspend fun javaUninstall(@Query("major") major: Int): ApiResponse<Boolean>
+
     // ----- 文件管理 -------------------------------------------------------
 
     @GET("/api/files/list")
@@ -184,6 +245,32 @@ interface NodeApi {
         @Query("uuid") uuid: String,
         @Query("upload_dir") uploadDir: String,
     ): ApiResponse<UploadTicketResponse>
+
+    // ----- 实例级回收站（§4.6） ------------------------------------------
+
+    @POST("/api/files/trash")
+    suspend fun fileTrash(
+        @Query("uuid") uuid: String,
+        @Body body: TrashBody,
+    ): ApiResponse<Boolean>
+
+    @GET("/api/files/trash/list")
+    suspend fun trashList(
+        @Query("uuid") uuid: String,
+        @Query("daemonId") daemonId: String? = null,
+    ): ApiResponse<TrashListResponse>
+
+    @POST("/api/files/trash/restore")
+    suspend fun trashRestore(
+        @Query("uuid") uuid: String,
+        @Body body: TrashIdsBody,
+    ): ApiResponse<Map<String, String>>
+
+    @POST("/api/files/trash/empty")
+    suspend fun trashEmpty(
+        @Query("uuid") uuid: String,
+        @Body body: TrashIdsBody,
+    ): ApiResponse<Boolean>
 
     // ----- 容器环境（Docker / Bastille） ----------------------------------
 

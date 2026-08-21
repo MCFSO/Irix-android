@@ -374,3 +374,112 @@ data class ContainerLimitsBody(
 data class ContainerCloneBody(
     val name: String,
 )
+
+// ---------------------------------------------------------------------------
+// 实例级运行指标（§4.3）
+// ---------------------------------------------------------------------------
+
+@Serializable
+data class InstanceStats(
+    val pid: Int = 0,
+    @SerialName("cpuPercent") val cpuPercent: Double = 0.0,
+    val memoryMb: Long = 0L,
+    @SerialName("networkDownloadBps") val networkDownloadBps: Long = 0L,
+    @SerialName("networkUploadBps") val networkUploadBps: Long = 0L,
+    val uptimeSec: Long = 0L,
+    val players: Int? = null,
+    val maxPlayers: Int? = null,
+    val tps: Double? = null,
+)
+
+// ---------------------------------------------------------------------------
+// Java 运行时检测 / JDK 安装（§4.2.1 / §4.2.2）
+// ---------------------------------------------------------------------------
+
+@Serializable
+data class JavaRuntime(
+    val path: String = "",
+    val version: String = "",
+    val vendor: String = "",
+    val major: Int = 0,
+    val available: Boolean = false,
+)
+
+@Serializable
+data class JavaRuntimeResponse(
+    val default: JavaRuntime? = null,
+    val all: List<JavaRuntime> = emptyList(),
+)
+
+@Serializable
+data class JavaInstallBody(
+    val major: Int,
+)
+
+// ---------------------------------------------------------------------------
+// 通用异步任务（jobId + 进度轮询）
+// ---------------------------------------------------------------------------
+
+@Serializable
+data class JobResult(
+    @SerialName("jobId") val jobId: String = "",
+)
+
+@Serializable
+data class TaskProgress(
+    val status: String = "",
+    val percent: Double = -1.0,
+    val message: String = "",
+    val path: String? = null,
+)
+
+// ---------------------------------------------------------------------------
+// 导入目录建实例 / 核心下载（§4.2.3 / §4.2.4）
+// ---------------------------------------------------------------------------
+
+@Serializable
+data class ImportInstanceBody(
+    val path: String,
+    val nickname: String = "",
+    @SerialName("daemonId") val daemonId: String? = null,
+)
+
+@Serializable
+data class DownloadCoreBody(
+    val uuid: String,
+    val url: String,
+    val fileName: String,
+    val sha512: String = "",
+    @SerialName("daemonId") val daemonId: String? = null,
+)
+
+// ---------------------------------------------------------------------------
+// 实例级回收站（§4.6）
+// ---------------------------------------------------------------------------
+
+@Serializable
+data class TrashEntry(
+    val id: String = "",
+    val name: String = "",
+    val originalPath: String = "",
+    val trashPath: String = "",
+    val size: Long = 0L,
+    val deletedAt: Long = 0L,
+)
+
+@Serializable
+data class TrashListResponse(
+    val items: List<TrashEntry> = emptyList(),
+)
+
+@Serializable
+data class TrashBody(
+    val targets: List<String>,
+    @SerialName("daemonId") val daemonId: String? = null,
+)
+
+@Serializable
+data class TrashIdsBody(
+    val ids: List<String>,
+    @SerialName("daemonId") val daemonId: String? = null,
+)

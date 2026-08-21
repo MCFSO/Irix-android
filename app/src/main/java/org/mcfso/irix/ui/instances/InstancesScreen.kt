@@ -13,7 +13,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DriveFolderUpload
 import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,10 +25,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import org.mcfso.irix.R
 import org.mcfso.irix.data.api.ApiResult
 import org.mcfso.irix.data.model.InstanceDetail
-import org.mcfso.irix.data.model.InstanceStatus
 import org.mcfso.irix.data.model.NodeConfig
 import org.mcfso.irix.ui.common.EmptyBox
 import org.mcfso.irix.ui.common.ErrorBox
@@ -54,6 +61,8 @@ fun InstancesScreen(
     val selected by session.selected.collectAsState()
     val state by vm.state.collectAsState()
     val snackbarHostState = rememberMessageSnackbarHostState(state.lastMessage) { vm.consumeMessage() }
+    var showImport by remember { mutableStateOf(false) }
+    var deleteTarget by remember { mutableStateOf<InstanceDetail?>(null) }
 
     LaunchedEffect(selected?.id) {
         selected?.let { vm.load(it, force = true) }
@@ -72,8 +81,13 @@ fun InstancesScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(stringResource(R.string.nav_instances), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
-                IconButton(onClick = { selected?.let { vm.load(it, force = true) } }) {
-                    Icon(Icons.Outlined.Refresh, contentDescription = stringResource(R.string.refresh))
+                Row {
+                    IconButton(onClick = { showImport = true }) {
+                        Icon(Icons.Outlined.DriveFolderUpload, contentDescription = stringResource(R.string.import_instance))
+                    }
+                    IconButton(onClick = { selected?.let { vm.load(it, force = true) } }) {
+                        Icon(Icons.Outlined.Refresh, contentDescription = stringResource(R.string.refresh))
+                    }
                 }
             }
 
@@ -85,36 +99,79 @@ fun InstancesScreen(
                     if (items.isEmpty()) {
                         EmptyBox(stringResource(R.string.instances_empty_hint))
                     } else {
-                        InstanceList(items, onOpenInstance)
+                        InstanceList(
+                            items,
+                            onOpen = onOpenInstance,
+                            onDelete = { deleteTarget = it },
+                        )
                     }
                 }
             }
         }
     }
+
+    if (showImport) {
+        val node = selected
+        if (node != null) {
+            ImportInstanceDialog(
+                onDismiss = { showImport = false },
+                onImport = { path, nickname ->
+                    vm.importInstance(node, path, nickname)
+                    showImport = false
+                },
+            )
+        } else {
+            showImport = false
+        }
+    }
+
+    deleteTarget?.let { inst ->
+        var deleteFile by remember { mutableStateOf(false) }
+        AlertDialog(
+            onDismissRequest = { deleteTarget = null },
+            title = { Text(stringResource(R.string.delete_instance)) },
+            text = {
+                Column {
+                    Text(stringResource(R.string.delete_instance_confirm, inst.config.nickname.ifEmpty { inst.instanceUuid.take(8) }))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(checked = deleteFile, onCheckedChange = { deleteFile = it })
+                        Text(stringResource(R.string.delete_instance_files))
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    selected?.let { vm.delete(it, listOf(inst.instanceUuid), deleteFile) }
+                    deleteTarget = null
+                }) { Text(stringResource(R.string.delete)) }
+            },
+            dismissButton = { TextButton(onClick = { deleteTarget = null }) { Text(stringResource(R.string.cancel)) } },
+        )
+    }
 }
 
 @Composable
-private fun InstanceList(items: List<InstanceDetail>, onOpen: (String) -> Unit) {
+private fun InstanceList(items: List<InstanceDetail>, onOpen: (String) -> Unit, onDelete: (InstanceDetail) -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 4.dp),
     ) {
         items(items, key = { it.instanceUuid }) { inst ->
-            InstanceRow(inst, onClick = { onOpen(inst.instanceUuid) })
+            InstanceRow(inst, onClick = { onOpen(inst.instanceUuid) }, onDelete = { onDelete(inst) })
         }
     }
 }
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-private fun InstanceRow(inst: InstanceDetail, onClick: () -> Unit) {
+private fun InstanceRow(inst: InstanceDetail, onClick: () -> Unit, onDelete: () -> Unit) {
     androidx.compose.material3.Card(
         modifier = Modifier.fillMaxWidth(),
         onClick = onClick,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(start = 16.dp, top = 16.dp, bottom = 16.dp, end = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ColorDot(statusColor(inst.status))
@@ -135,6 +192,9 @@ private fun InstanceRow(inst: InstanceDetail, onClick: () -> Unit) {
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+            }
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Outlined.Delete, contentDescription = stringResource(R.string.delete))
             }
         }
     }

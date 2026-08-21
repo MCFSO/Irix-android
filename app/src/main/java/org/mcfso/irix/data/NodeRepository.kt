@@ -14,6 +14,7 @@ import org.mcfso.irix.data.model.ContainerListItem
 import org.mcfso.irix.data.model.ContainerStats
 import org.mcfso.irix.data.model.CreateInstanceResponse
 import org.mcfso.irix.data.model.DeleteInstanceBody
+import org.mcfso.irix.data.model.DownloadCoreBody
 import org.mcfso.irix.data.model.DownloadTicketResponse
 import org.mcfso.irix.data.model.FileCompressBody
 import org.mcfso.irix.data.model.FileDeleteBody
@@ -25,13 +26,22 @@ import org.mcfso.irix.data.model.FileWriteBody
 import org.mcfso.irix.data.model.ImageBuildBody
 import org.mcfso.irix.data.model.ImageItem
 import org.mcfso.irix.data.model.ImagePullBody
+import org.mcfso.irix.data.model.ImportInstanceBody
 import org.mcfso.irix.data.model.InstanceConfig
 import org.mcfso.irix.data.model.InstanceDetail
 import org.mcfso.irix.data.model.InstanceListResponse
+import org.mcfso.irix.data.model.InstanceStats
+import org.mcfso.irix.data.model.JavaInstallBody
+import org.mcfso.irix.data.model.JavaRuntimeResponse
+import org.mcfso.irix.data.model.JobResult
 import org.mcfso.irix.data.model.LoadStatus
 import org.mcfso.irix.data.model.NetworkItem
 import org.mcfso.irix.data.model.NodeConfig
 import org.mcfso.irix.data.model.OverviewResponse
+import org.mcfso.irix.data.model.TaskProgress
+import org.mcfso.irix.data.model.TrashBody
+import org.mcfso.irix.data.model.TrashIdsBody
+import org.mcfso.irix.data.model.TrashListResponse
 import org.mcfso.irix.data.model.UploadTicketResponse
 import org.mcfso.irix.data.model.UuidResult
 import org.mcfso.irix.data.model.VolumeItem
@@ -93,6 +103,50 @@ class NodeRepository {
     suspend fun instanceOutputLog(node: NodeConfig, uuid: String, size: Int? = null): ApiResult<String> =
         apiCall { api(node).instanceOutputLog(uuid, size) }
 
+    // ----- 实例级扩展：日志持久化 / 运行指标 / 导入 / 核心下载 ------------
+
+    suspend fun instanceLogs(
+        node: NodeConfig,
+        uuid: String,
+        tail: Int? = null,
+        since: Long? = null,
+    ): ApiResult<String> = apiCall { api(node).instanceLogs(uuid, null, tail, since) }
+
+    suspend fun instanceLogsClear(node: NodeConfig, uuid: String): ApiResult<Boolean> =
+        apiCall { api(node).instanceLogsClear(uuid, null) }
+
+    suspend fun instanceStats(node: NodeConfig, uuid: String): ApiResult<InstanceStats> =
+        apiCall { api(node).instanceStats(uuid, null) }
+
+    suspend fun instanceImport(node: NodeConfig, path: String, nickname: String): ApiResult<JobResult> =
+        apiCall { api(node).instanceImport(ImportInstanceBody(path, nickname, null)) }
+
+    suspend fun downloadCore(
+        node: NodeConfig,
+        uuid: String,
+        url: String,
+        fileName: String,
+        sha512: String = "",
+    ): ApiResult<JobResult> =
+        apiCall { api(node).downloadCore(DownloadCoreBody(uuid, url, fileName, sha512, null)) }
+
+    suspend fun downloadCoreProgress(node: NodeConfig, jobId: String): ApiResult<TaskProgress> =
+        apiCall { api(node).downloadCoreProgress(jobId) }
+
+    // ----- Java 运行时 / JDK 安装 ----------------------------------------
+
+    suspend fun runtimeJava(node: NodeConfig): ApiResult<JavaRuntimeResponse> =
+        apiCall { api(node).runtimeJava() }
+
+    suspend fun javaInstall(node: NodeConfig, major: Int): ApiResult<JobResult> =
+        apiCall { api(node).javaInstall(JavaInstallBody(major)) }
+
+    suspend fun javaInstallProgress(node: NodeConfig, jobId: String): ApiResult<TaskProgress> =
+        apiCall { api(node).javaInstallProgress(jobId) }
+
+    suspend fun javaUninstall(node: NodeConfig, major: Int): ApiResult<Boolean> =
+        apiCall { api(node).javaUninstall(major) }
+
     // ----- 文件管理 -------------------------------------------------------
 
     suspend fun fileList(node: NodeConfig, uuid: String, target: String, page: Int = 1): ApiResult<FileListResponse> =
@@ -130,6 +184,20 @@ class NodeRepository {
 
     suspend fun fileUploadTicket(node: NodeConfig, uuid: String, uploadDir: String): ApiResult<UploadTicketResponse> =
         apiCall { api(node).fileUploadTicket(uuid, uploadDir) }
+
+    // ----- 实例级回收站 ---------------------------------------------------
+
+    suspend fun fileTrash(node: NodeConfig, uuid: String, targets: List<String>): ApiResult<Boolean> =
+        apiCall { api(node).fileTrash(uuid, TrashBody(targets, null)) }
+
+    suspend fun trashList(node: NodeConfig, uuid: String): ApiResult<TrashListResponse> =
+        apiCall { api(node).trashList(uuid, null) }
+
+    suspend fun trashRestore(node: NodeConfig, uuid: String, ids: List<String>): ApiResult<Map<String, String>> =
+        apiCall { api(node).trashRestore(uuid, TrashIdsBody(ids, null)) }
+
+    suspend fun trashEmpty(node: NodeConfig, uuid: String, ids: List<String>): ApiResult<Boolean> =
+        apiCall { api(node).trashEmpty(uuid, TrashIdsBody(ids, null)) }
 
     // ----- 容器环境 -------------------------------------------------------
 
