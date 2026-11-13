@@ -16,10 +16,19 @@ jobs:
   build:
     name: 构建 / 测试 / Lint
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
-      - name: 检出代码
+      - name: 检出 Android 代码
         uses: actions/checkout@v5
+
+      # Rust 时间系统源码在 MCFSO/IriX；Android 仓库不复制一份 Rust 代码。
+      # 若 IriX 改为私有仓库，需要给这一步配跨仓库 token。
+      - name: 检出 IriX Rust 源码
+        uses: actions/checkout@v5
+        with:
+          repository: MCFSO/IriX
+          path: irix
+          ref: main
 
       - name: 设置 JDK 21
         uses: actions/setup-java@v5
@@ -29,6 +38,23 @@ jobs:
 
       - name: 设置 Gradle（含依赖缓存）
         uses: gradle/actions/setup-gradle@v4
+
+      - name: 设置 Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 安装 NDK 28（Gradle ndkVersion 精确匹配）
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "ndk;28.0.13004108"
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/28.0.13004108" >> "$GITHUB_ENV"
+
+      - name: 设置 Rust + Android target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android
+
+      - name: 编译 libxmc_time.so
+        run: bash tool/build_xmc_time_android.sh "$GITHUB_WORKSPACE/irix"
 
       # Windows 提交可能丢失 gradlew 可执行位，显式恢复保证 Linux runner 可运行
       - name: 恢复 gradlew 可执行权限
