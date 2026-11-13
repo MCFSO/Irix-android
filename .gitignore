@@ -38,3 +38,6 @@ google-services.json
 # 子目录中独立维护的服务端仓库（IriX-Node），不纳入客户端仓库追踪与扫描
 IriX-Node/
 .zcode/
+
+# Local packaged APKs / UI dumps (generated)
+/dist/

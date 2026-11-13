@@ -13,6 +13,7 @@ IriX 的 Android 客户端：管理 MCSM 风格节点的服务器管理工具，
 - **文件管理**：基于实例工作目录的浏览（面包屑导航）、新建目录 / 文件、重命名、删除、文本在线编辑、直连下载（系统 DownloadManager）、直连上传（multipart）
 - **容器环境**：运行时信息（Docker / Bastille）、容器列表与控制（启动 / 停止 / 重启 / 强杀 / 删除）、新建容器（镜像、命令、端口映射、数据卷、环境变量、重启策略、资源限制）
 - **节点管理**：多节点增删改、一键切换选中节点、API Key / 配对码配置、节点配置本地持久化（DataStore）
+- **GNSS 时间校准**：从概览页右上角时钟图标进入，采集手机 GPS/北斗时间样本（Raw GNSS / GNSS 毫秒时钟 / Location 三档自动降级），上报诚实的不确定度，支持 JSONL 落盘与本机回环 NDJSON 流；不修改系统时间，只把可复算的观测交给 IriX 的 `xmc_time`（详见 [`docs/gnss-time-integration.md`](docs/gnss-time-integration.md)）
 
 ## 技术栈
 
@@ -71,12 +72,23 @@ app/src/main/java/org/mcfso/irix/
 │   ├── NodeStore.kt           # DataStore 节点配置 CRUD
 │   ├── NodeRepository.kt      # 仓库层（统一 apiCall 错误包装）
 │   └── FileTransfer.kt        # 直连下载（DownloadManager）/ 上传（OkHttp multipart）
+├── gnss/                      # GNSS 时间采集（见 docs/gnss-time-integration.md）
+│   ├── GnssSampler.kt         # Raw GNSS / 毫秒时钟 / Location 三档采集与降级
+│   ├── GnssCalibrationController.kt # 会话控制、诊断校验、落盘与 socket 上报
+│   ├── GnssCalibrationService.kt    # location 类型前台服务
+│   ├── GnssTimeMath.kt        # UTC 换算（GPS→Unix 历元）、不确定度模型
+│   ├── GnssSampleValidator.kt # 契约准入规则的本机诊断复刻 + 统计
+│   ├── GnssClockModel.kt      # 硬件时钟回归（仅诊断）
+│   ├── model/                 # 样本、判定、日志记录模型
+│   ├── sink/                  # JSONL 日志存储 / 本机回环 NDJSON 服务
+│   └── wire/                  # gnss_sample / gnss_hello 线协议编码
 └── ui/
     ├── overview/              # 概览：系统信息 + 使用率 + 轮询
     ├── instances/             # 实例列表 / 详情（控制台·配置·信息）/ 新建
     ├── files/                 # 文件浏览 / 在线编辑 / 上传下载
     ├── containers/            # 容器列表 / 新建容器
     ├── nodes/                 # 节点管理
+    ├── time/                  # GNSS 时间校准控制台
     ├── navigation/            # 顶部导航目的地 + 路由
     ├── common/                # 通用组件（Snackbar 助手、状态文案、格式化）
     └── theme/                 # Material 3 主题（含 Android 12+ 动态取色）
@@ -86,7 +98,7 @@ app/src/main/java/org/mcfso/irix/
 
 - **系统版本**：Android 6.0（API 23）~ 最新；`targetSdk 37` 适配最新平台行为
 - **架构**：纯 JVM 字节码，arm64-v8a / armeabi-v7a / x86 / x86_64 全部兼容
-- **权限**：仅 `INTERNET` + `ACCESS_NETWORK_STATE`，无运行时权限弹窗
+- **权限**：`INTERNET` + `ACCESS_NETWORK_STATE` 为管理功能必需；**时间校准**额外需要运行时 `ACCESS_FINE_LOCATION`（+ `ACCESS_COARSE_LOCATION`）与前台服务（`FOREGROUND_SERVICE_LOCATION`），`POST_NOTIFICATIONS` 可选（拒绝不影响采集）。不申请后台定位，不保存坐标
 - **屏幕**：自适应导航套件（手机底部导航栏，平板 / 折叠屏侧边栏）
 
 ## 许可证

@@ -24,6 +24,8 @@ enum class TopDestination(
 }
 
 object Routes {
+    /** 二级页：GNSS 时间校准控制台（从概览页进入，不占底部导航）。 */
+    const val TIME_CALIBRATION = "time/calibration"
     const val INSTANCE_DETAIL = "instance/{uuid}"
     const val FILES_DETAIL = "files/{uuid}"
     const val FILE_EDIT = "file/edit/{uuid}/{path:.+}"

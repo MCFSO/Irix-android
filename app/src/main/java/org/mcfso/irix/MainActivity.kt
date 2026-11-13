@@ -45,6 +45,7 @@ import org.mcfso.irix.ui.navigation.TopDestination
 import org.mcfso.irix.ui.nodes.NodesScreen
 import org.mcfso.irix.ui.overview.OverviewScreen
 import org.mcfso.irix.ui.theme.IrixTheme
+import org.mcfso.irix.ui.time.TimeCalibrationScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,7 +100,17 @@ fun IrixApp() {
             },
         ) {
             NavHost(navController, startDestination = TopDestination.OVERVIEW.route) {
-                composable(TopDestination.OVERVIEW.route) { OverviewScreen(session) }
+                composable(TopDestination.OVERVIEW.route) {
+                    OverviewScreen(
+                        session = session,
+                        onOpenTimeCalibration = {
+                            navController.navigate(Routes.TIME_CALIBRATION) { launchSingleTop = true }
+                        },
+                    )
+                }
+                composable(Routes.TIME_CALIBRATION) {
+                    TimeCalibrationScreen(onBack = { navController.popBackStack() })
+                }
                 composable(TopDestination.INSTANCES.route) {
                     InstancesScreen(
                         session = session,
@@ -187,6 +198,7 @@ fun IrixApp() {
 /** 二级页（实例详情/文件浏览/文件编辑）归属其一级目的地高亮。 */
 private fun isDestinationSelected(currentRoute: String?, dest: TopDestination): Boolean = when (currentRoute) {
     dest.route -> true
+    Routes.TIME_CALIBRATION -> dest == TopDestination.OVERVIEW
     Routes.INSTANCE_DETAIL -> dest == TopDestination.INSTANCES
     Routes.FILES_DETAIL -> dest == TopDestination.FILES
     Routes.FILE_EDIT -> dest == TopDestination.FILES

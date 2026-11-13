@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -38,7 +39,10 @@ import org.mcfso.irix.ui.common.formatRate
 import org.mcfso.irix.ui.SessionViewModel
 
 @Composable
-fun OverviewScreen(session: SessionViewModel) {
+fun OverviewScreen(
+    session: SessionViewModel,
+    onOpenTimeCalibration: () -> Unit = {},
+) {
     val selected by session.selected.collectAsState()
     val overview by session.overview.collectAsState()
     val refreshing by session.refreshing.collectAsState()
@@ -61,6 +65,9 @@ fun OverviewScreen(session: SessionViewModel) {
             )
             IconButton(onClick = { session.refreshOverview(force = true) }, enabled = !refreshing) {
                 Icon(Icons.Outlined.Refresh, contentDescription = stringResource(R.string.refresh))
+            }
+            IconButton(onClick = onOpenTimeCalibration) {
+                Icon(Icons.Outlined.Schedule, contentDescription = stringResource(R.string.nav_time_calibration))
             }
         }
 
